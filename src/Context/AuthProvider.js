@@ -34,14 +34,14 @@ export default function AuthProvider({ children }) {
         //   })
         // );
         setIsLoading(false);
-        history.push("/");
+        history.push("/react_chat-app");
         return;
       }
 
       // reset user info
       setUser({});
       setIsLoading(false);
-      history.push("/login");
+      history.push("/react_chat-app/login");
     });
 
     // clean function

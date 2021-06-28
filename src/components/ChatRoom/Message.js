@@ -32,6 +32,14 @@ const CurrentUserWrapperStyled = styled.div`
   justify-content: flex-end;
   align-items: space-between;
 
+  .messages-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    align-items: space-between;
+  }
+
   .author {
     margin-right: 5px;
     font-weight: bold;
@@ -41,6 +49,7 @@ const CurrentUserWrapperStyled = styled.div`
     margin-right: 10px;
     font-size: 11px;
     color: #a7a7a7;
+    padding-top: 4px;
   }
 
   .content {
@@ -70,9 +79,6 @@ export default function Message({
   photoURL,
 }) {
   const { user } = React.useContext(AuthContext);
-  console.log(user);
-  console.log(uid);
-  console.log(uid === user.uid);
 
   // return (
   //   <WrapperStyled>
@@ -94,7 +100,7 @@ export default function Message({
   return user.uid === uid ? (
     <CurrentUserWrapperStyled>
       <div>
-        <div>
+        <div class="messages-container">
           <Typography.Text className="date">
             {formatDate(createdAt?.seconds)}
           </Typography.Text>

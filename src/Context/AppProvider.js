@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import useFirestore from '../hooks/useFirestore';
-import { AuthContext } from './AuthProvider';
+import React, { useState } from "react";
+import useFirestore from "../hooks/useFirestore";
+import { AuthContext } from "./AuthProvider";
 
 export const AppContext = React.createContext();
 
 export default function AppProvider({ children }) {
   const [isAddRoomVisible, setIsAddRoomVisible] = useState(false);
   const [isInviteMemberVisible, setIsInviteMemberVisible] = useState(false);
-  const [selectedRoomId, setSelectedRoomId] = useState('');
+  const [isMemberListVisible, setIsMemberListVisible] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState("");
 
   const {
     user: { uid },
@@ -15,13 +16,13 @@ export default function AppProvider({ children }) {
 
   const roomsCondition = React.useMemo(() => {
     return {
-      fieldName: 'members',
-      operator: 'array-contains',
+      fieldName: "members",
+      operator: "array-contains",
       compareValue: uid,
     };
   }, [uid]);
 
-  const rooms = useFirestore('rooms', roomsCondition);
+  const rooms = useFirestore("rooms", roomsCondition);
 
   const selectedRoom = React.useMemo(
     () => rooms.find((room) => room.id === selectedRoomId) || {},
@@ -30,16 +31,16 @@ export default function AppProvider({ children }) {
 
   const usersCondition = React.useMemo(() => {
     return {
-      fieldName: 'uid',
-      operator: 'in',
+      fieldName: "uid",
+      operator: "in",
       compareValue: selectedRoom.members,
     };
   }, [selectedRoom.members]);
 
-  const members = useFirestore('users', usersCondition);
+  const members = useFirestore("users", usersCondition);
 
   const clearState = () => {
-    setSelectedRoomId('');
+    setSelectedRoomId("");
     setIsAddRoomVisible(false);
     setIsInviteMemberVisible(false);
   };
@@ -51,6 +52,8 @@ export default function AppProvider({ children }) {
         members,
         selectedRoom,
         isAddRoomVisible,
+        isMemberListVisible,
+        setIsMemberListVisible,
         setIsAddRoomVisible,
         selectedRoomId,
         setSelectedRoomId,

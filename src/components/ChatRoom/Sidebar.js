@@ -7,6 +7,7 @@ import styled from "styled-components";
 const SidebarStyled = styled.div`
   height: 100vh;
   border-right: 1px solid black;
+  background-color: #f5f5f5;
 `;
 
 export default function Sidebar() {

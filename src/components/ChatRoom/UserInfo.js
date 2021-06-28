@@ -33,8 +33,9 @@ export default function UserInfo() {
         <Typography.Text className="username">{displayName}</Typography.Text>
       </div>
       <Button
-        style={{ color: "black" }}
+        danger
         ghost
+        dashed
         onClick={() => {
           // clear state in App Provider when logout
           clearState();

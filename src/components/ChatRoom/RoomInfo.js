@@ -6,12 +6,33 @@ import {
 } from "@ant-design/icons";
 import React, { useContext } from "react";
 import styled from "styled-components";
+import { deleteDocument, deleteDocumentWhere } from "../../firebase/services";
 import { Button, Tooltip, Avatar, Form, Alert } from "antd";
 import { AppContext } from "../../Context/AppProvider";
+import { AuthContext } from "../../Context/AuthProvider";
+import { useFirestore } from "../../hooks/useFirestore";
 
 export default function RoomInfo() {
-  const { selectedRoom, members, setIsInviteMemberVisible } =
-    useContext(AppContext);
+  const {
+    selectedRoom,
+    members,
+    setIsInviteMemberVisible,
+    setIsMemberListVisible,
+  } = useContext(AppContext);
+  const { user } = useContext(AuthContext);
+
+  console.log(selectedRoom.id);
+
+  const handleDeleteRoom = () => {
+    const condition = {
+      fieldName: "roomId",
+      operator: "==",
+      compareValue: selectedRoom.id,
+    };
+
+    deleteDocument("rooms", selectedRoom.id);
+    deleteDocumentWhere("messages", condition);
+  };
 
   return (
     <WrapperStyled>
@@ -47,7 +68,14 @@ export default function RoomInfo() {
               </Button>
             </ButtonGroupStyled>
             <ButtonGroupStyled>
-              <Button icon={<UsergroupAddOutlined />} type="text" block>
+              <Button
+                icon={<UsergroupAddOutlined />}
+                onClick={() => {
+                  setIsMemberListVisible(true);
+                }}
+                type="text"
+                block
+              >
                 Thanh vien trong nhom
               </Button>
             </ButtonGroupStyled>
@@ -61,6 +89,18 @@ export default function RoomInfo() {
                 Roi nhom
               </Button>
             </ButtonGroupStyled>
+            {members.slice(-1)[0]?.uid === user.uid ? (
+              <ButtonGroupStyled>
+                <Button
+                  onClick={handleDeleteRoom}
+                  icon={<LogoutOutlined />}
+                  type="text"
+                  block
+                >
+                  Xoa nhom
+                </Button>
+              </ButtonGroupStyled>
+            ) : null}
           </HeaderStyled>
         </>
       ) : (
@@ -105,4 +145,5 @@ const ButtonGroupStyled = styled.div`
 
 const WrapperStyled = styled.div`
   height: 100vh;
+  background-color: #f5f5f5;
 `;

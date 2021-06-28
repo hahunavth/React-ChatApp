@@ -1,4 +1,8 @@
-import { UserAddOutlined } from "@ant-design/icons";
+import {
+  TranslationOutlined,
+  UserAddOutlined,
+  SendOutlined,
+} from "@ant-design/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Button, Tooltip, Avatar, Form, Input, Alert } from "antd";
@@ -7,13 +11,8 @@ import { AppContext } from "../../Context/AppProvider";
 import { addDocument } from "../../firebase/services";
 import { AuthContext } from "../../Context/AuthProvider";
 import useFirestore from "../../hooks/useFirestore";
-
-import { useDispatch, useSelector } from "react-redux";
-import {
-  setUser,
-  removeUser,
-  userSelector,
-} from "../../Store/Reducer/AuthSlice";
+import { Spin } from "antd";
+import { LoadingOutlined, MessageOutlined } from "@ant-design/icons";
 
 const HeaderStyled = styled.div`
   display: flex;
@@ -78,9 +77,7 @@ const MessageListStyled = styled.div`
 `;
 
 export default function ChatWindow() {
-  // const dispatch = useDispatch();
-  // const currnetUser = useSelector(userSelector);
-  // console.log(currnetUser);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { selectedRoom, members, setIsInviteMemberVisible } =
     useContext(AppContext);
@@ -127,11 +124,16 @@ export default function ChatWindow() {
   const messages = useFirestore("messages", condition);
 
   useEffect(() => {
+    setIsLoading(true);
+  }, [selectedRoom.id]);
+
+  useEffect(() => {
     // scroll to bottom after message changed
     if (messageListRef?.current) {
       messageListRef.current.scrollTop =
         messageListRef.current.scrollHeight + 50;
     }
+    setIsLoading(false);
   }, [messages]);
 
   return (
@@ -166,35 +168,77 @@ export default function ChatWindow() {
               </Avatar.Group>
             </ButtonGroupStyled>
           </HeaderStyled>
-          <ContentStyled>
-            <MessageListStyled ref={messageListRef}>
-              {messages.map((mes) => (
-                <Message
-                  key={mes.id}
-                  uid={mes.uid}
-                  text={mes.text}
-                  photoURL={mes.photoURL}
-                  displayName={mes.displayName}
-                  createdAt={mes.createdAt}
-                />
-              ))}
-            </MessageListStyled>
-            <FormStyled form={form}>
-              <Form.Item name="message">
-                <Input
-                  ref={inputRef}
-                  onChange={handleInputChange}
-                  onPressEnter={handleOnSubmit}
-                  placeholder="Nhập tin nhắn..."
-                  bordered={false}
-                  autoComplete="off"
-                />
-              </Form.Item>
-              <Button type="primary" onClick={handleOnSubmit}>
-                Gửi
-              </Button>
-            </FormStyled>
-          </ContentStyled>
+          {isLoading ? (
+            <Spin
+              size="large"
+              tip="Loading..."
+              style={{ position: "fixed", bottom: "50%", left: "50%" }}
+              indicator={<LoadingOutlined style={{ fontSize: 40 }} spin />}
+            />
+          ) : (
+            <ContentStyled>
+              <MessageListStyled ref={messageListRef}>
+                {messages.length ? (
+                  messages.map((mes) => (
+                    <Message
+                      key={mes.id}
+                      uid={mes.uid}
+                      text={mes.text}
+                      photoURL={mes.photoURL}
+                      displayName={mes.displayName}
+                      createdAt={mes.createdAt}
+                    />
+                  ))
+                ) : (
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "50%",
+                      left: "50%",
+                      transform: `translate(-50%, 50%)`,
+                      display: "flex",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <MessageOutlined
+                      style={{
+                        fontSize: "90px",
+                        color: "#cccccc",
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontSize: "28px",
+                        color: "#99999999",
+                        fontWeight: "500",
+                      }}
+                    >
+                      Chat now!
+                    </span>
+                  </div>
+                )}
+              </MessageListStyled>
+              <FormStyled form={form}>
+                <Form.Item name="message">
+                  <Input
+                    ref={inputRef}
+                    onChange={handleInputChange}
+                    onPressEnter={handleOnSubmit}
+                    placeholder="Nhập tin nhắn..."
+                    bordered={false}
+                    autoComplete="off"
+                  />
+                </Form.Item>
+                <Button
+                  type="primary"
+                  icon={<SendOutlined />}
+                  shape="circle"
+                  onClick={handleOnSubmit}
+                ></Button>
+              </FormStyled>
+            </ContentStyled>
+          )}
         </>
       ) : (
         <Alert

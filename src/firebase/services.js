@@ -3,10 +3,45 @@ import firebase, { db } from "./config";
 export const addDocument = (collection, data) => {
   const query = db.collection(collection);
 
+  //WARNING: cannot add field undefined
+  for (const field in data) {
+    if (typeof data[field] === "undefined") {
+      data[field] = "";
+    }
+  }
+
   query.add({
     ...data,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
   });
+};
+
+export const deleteDocument = (collection, data) => {
+  const query = db.collection(collection);
+  query
+    .doc(data)
+    .delete()
+    .then(
+      () => {
+        console.log("deleted");
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+};
+
+export const deleteDocumentWhere = (collection, condition) => {
+  const query = db.collection(collection);
+  // console.log(query.where("roomId", "==", condition.compareValue));
+  query
+    .where(condition.fieldName, condition.operator, condition.compareValue)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    });
 };
 
 // tao keywords cho displayName, su dung cho search

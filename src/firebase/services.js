@@ -31,6 +31,21 @@ export const deleteDocument = (collection, data) => {
     );
 };
 
+export const updateDocument = (collection, oldData, newData) => {
+  const query = db.collection(collection);
+  query
+    .doc(oldData.id)
+    .update(newData)
+    .then(
+      () => {
+        console.log("updated");
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+};
+
 export const deleteDocumentWhere = (collection, condition) => {
   const query = db.collection(collection);
   // console.log(query.where("roomId", "==", condition.compareValue));

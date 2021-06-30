@@ -3,14 +3,9 @@ import { useHistory } from "react-router-dom";
 import { auth } from "../firebase/config";
 import { Spin } from "antd";
 
-import { useDispatch, useSelector } from "react-redux";
-import { setUser, removeUser, userSelector } from "../Store/Reducer/AuthSlice";
-
 export const AuthContext = React.createContext();
 
 export default function AuthProvider({ children }) {
-  const dispatch = useDispatch();
-
   const [user, setUser] = useState({});
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);

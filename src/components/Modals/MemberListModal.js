@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { Modal, Button, Avatar, Select } from "antd";
+import React, { useContext } from "react";
+import { Modal, Button, Avatar } from "antd";
 import { AppContext } from "../../Context/AppProvider";
 import { AuthContext } from "../../Context/AuthProvider";
 

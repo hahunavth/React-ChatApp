@@ -3,18 +3,19 @@ import { Row, Col } from "antd";
 import Sidebar from "./Sidebar";
 import ChatWindow from "./ChatWindow";
 import RoomInfo from "./RoomInfo";
+import { ThemeContext } from "../../Context/ThemeProvider";
 
 export default function ChatRoom() {
   return (
     <div>
       <Row>
-        <Col span={6}>
+        <Col span={5}>
           <Sidebar />
         </Col>
-        <Col span={12}>
+        <Col span={14}>
           <ChatWindow />
         </Col>
-        <Col span={6}>
+        <Col span={5}>
           <RoomInfo />
         </Col>
       </Row>

@@ -1,8 +1,4 @@
-import {
-  TranslationOutlined,
-  UserAddOutlined,
-  SendOutlined,
-} from "@ant-design/icons";
+import { /*UserAddOutlined,*/ SendOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Button, Tooltip, Avatar, Form, Input, Alert } from "antd";
@@ -13,14 +9,14 @@ import { AuthContext } from "../../Context/AuthProvider";
 import useFirestore from "../../hooks/useFirestore";
 import { Spin } from "antd";
 import { LoadingOutlined, MessageOutlined } from "@ant-design/icons";
+import ChatInput from "./ChatInput";
 
 const HeaderStyled = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 56px;
+  height: 57px;
   padding: 0 16px;
   align-items: center;
-  border-bottom: 1px solid rgb(230, 230, 230);
 
   .header {
     &__info {
@@ -46,14 +42,17 @@ const ButtonGroupStyled = styled.div`
 `;
 
 const WrapperStyled = styled.div`
-  height: 100vh;
+  height: 96vh;
+  margin-top: 2vh;
 `;
 
 const ContentStyled = styled.div`
-  height: calc(100% - 56px);
+  height: 100%;
   display: flex;
   flex-direction: column;
   padding: 11px;
+  background: #f3f6fb;
+  border-radius: 25px;
   justify-content: flex-end;
 `;
 
@@ -62,7 +61,7 @@ const FormStyled = styled(Form)`
   justify-content: space-between;
   align-items: center;
   padding: 2px 2px 2px 0;
-  border: 1px solid rgb(230, 230, 230);
+  border: 1px solid #cccccc;
   border-radius: 2px;
 
   .ant-form-item {
@@ -79,7 +78,7 @@ const MessageListStyled = styled.div`
 export default function ChatWindow() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const { selectedRoom, members, setIsInviteMemberVisible } =
+  const { selectedRoom, members /*, setIsInviteMemberVisible */ } =
     useContext(AppContext);
   const {
     user: { uid, photoURL, displayName },
@@ -88,21 +87,25 @@ export default function ChatWindow() {
   const [form] = Form.useForm();
   const inputRef = useRef(null);
   const messageListRef = useRef(null);
+  const el = useRef(null);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
   const handleOnSubmit = () => {
-    addDocument("messages", {
-      text: inputValue,
-      uid,
-      photoURL,
-      roomId: selectedRoom.id,
-      displayName,
-    });
+    if (inputValue) {
+      addDocument("messages", {
+        text: inputValue,
+        uid,
+        photoURL,
+        roomId: selectedRoom.id,
+        displayName,
+      });
 
-    form.resetFields(["message"]);
+      form.resetFields(["message"]);
+      setInputValue("");
+    }
 
     // focus to input again after submit
     if (inputRef?.current) {
@@ -132,30 +135,38 @@ export default function ChatWindow() {
     if (messageListRef?.current) {
       messageListRef.current.scrollTop =
         messageListRef.current.scrollHeight + 50;
+      // messageListRef.current.scrollIntoView({
+      //   block: "end",
+      //   behavior: "smooth",
+      // });
     }
     setIsLoading(false);
   }, [messages]);
+
+  useEffect(() => {
+    if (el?.current) el.current.scrollIntoView({ block: "end" });
+  });
 
   return (
     <WrapperStyled>
       {selectedRoom.id ? (
         <>
-          <HeaderStyled>
+          {/* <HeaderStyled>
             <div className="header__info">
               <p className="header__title">{selectedRoom.name}</p>
               <span className="header__description">
                 {selectedRoom.description}
               </span>
             </div>
-            <ButtonGroupStyled>
-              <Button
+            <ButtonGroupStyled> */}
+          {/* <Button
                 icon={<UserAddOutlined />}
                 type="text"
                 onClick={() => setIsInviteMemberVisible(true)}
               >
                 Mời
-              </Button>
-              <Avatar.Group size="small" maxCount={2}>
+              </Button> */}
+          {/* <Avatar.Group size="small" maxCount={2}>
                 {members.map((member) => (
                   <Tooltip title={member.displayName} key={member.id}>
                     <Avatar src={member.photoURL}>
@@ -167,7 +178,7 @@ export default function ChatWindow() {
                 ))}
               </Avatar.Group>
             </ButtonGroupStyled>
-          </HeaderStyled>
+          </HeaderStyled> */}
           {isLoading ? (
             <Spin
               size="large"
@@ -218,8 +229,9 @@ export default function ChatWindow() {
                     </span>
                   </div>
                 )}
+                <div ref={el} id={"el"}></div>
               </MessageListStyled>
-              <FormStyled form={form}>
+              {/* <FormStyled form={form}>
                 <Form.Item name="message">
                   <Input
                     ref={inputRef}
@@ -236,7 +248,8 @@ export default function ChatWindow() {
                   shape="circle"
                   onClick={handleOnSubmit}
                 ></Button>
-              </FormStyled>
+              </FormStyled> */}
+              <ChatInput />
             </ContentStyled>
           )}
         </>

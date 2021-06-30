@@ -6,11 +6,14 @@ import {
 } from "@ant-design/icons";
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { deleteDocument, deleteDocumentWhere } from "../../firebase/services";
-import { Button, Tooltip, Avatar, Form, Alert } from "antd";
+import {
+  deleteDocument,
+  deleteDocumentWhere,
+  updateDocument,
+} from "../../firebase/services";
+import { Button, Tooltip, Avatar, Alert } from "antd";
 import { AppContext } from "../../Context/AppProvider";
 import { AuthContext } from "../../Context/AuthProvider";
-import { useFirestore } from "../../hooks/useFirestore";
 
 export default function RoomInfo() {
   const {
@@ -20,8 +23,6 @@ export default function RoomInfo() {
     setIsMemberListVisible,
   } = useContext(AppContext);
   const { user } = useContext(AuthContext);
-
-  console.log(selectedRoom.id);
 
   const handleDeleteRoom = () => {
     const condition = {
@@ -34,29 +35,43 @@ export default function RoomInfo() {
     deleteDocumentWhere("messages", condition);
   };
 
+  const handleLeaveRoom = () => {
+    if (selectedRoom?.members.length >= 2) {
+      const tmpRoom = JSON.parse(JSON.stringify(selectedRoom));
+      tmpRoom.members.shift();
+      console.log(selectedRoom);
+      console.log(tmpRoom);
+      updateDocument("rooms", selectedRoom, tmpRoom);
+    } else {
+      handleDeleteRoom();
+    }
+  };
+
   return (
     <WrapperStyled>
       {selectedRoom.id ? (
         <>
           <HeaderStyled>
-            <Avatar.Group size="large" maxCount={2} className="avatar">
-              {members.map((member) => (
-                <Tooltip title={member.displayName} key={member.id}>
-                  <Avatar src={member.photoURL}>
-                    {member.photoURL
-                      ? ""
-                      : member.displayName?.charAt(0)?.toUpperCase()}
-                  </Avatar>
-                </Tooltip>
-              ))}
-            </Avatar.Group>
+            <GroupInfo>
+              <Avatar.Group size="large" maxCount={2} className="avatar">
+                {members.map((member) => (
+                  <Tooltip title={member.displayName} key={member.id}>
+                    <Avatar src={member.photoURL}>
+                      {member.photoURL
+                        ? ""
+                        : member.displayName?.charAt(0)?.toUpperCase()}
+                    </Avatar>
+                  </Tooltip>
+                ))}
+              </Avatar.Group>
 
-            <div className="header__info">
-              <p className="header__title">{selectedRoom.name}</p>
-              <span className="header__description">
-                {selectedRoom.description}
-              </span>
-            </div>
+              <div className="header__info">
+                <p className="header__title">{selectedRoom.name}</p>
+                <span className="header__description">
+                  {selectedRoom.description}
+                </span>
+              </div>
+            </GroupInfo>
             <ButtonGroupStyled>
               <Button
                 icon={<UserAddOutlined />}
@@ -85,7 +100,12 @@ export default function RoomInfo() {
               </Button>
             </ButtonGroupStyled>
             <ButtonGroupStyled>
-              <Button icon={<LogoutOutlined />} type="text" block>
+              <Button
+                icon={<LogoutOutlined />}
+                onClick={handleLeaveRoom}
+                type="text"
+                block
+              >
                 Roi nhom
               </Button>
             </ButtonGroupStyled>
@@ -120,7 +140,7 @@ const HeaderStyled = styled.div`
   text-align: center;
 
   .avatar {
-    margin-top: 15%;
+    margin-top: 10%;
   }
   .header__info {
     margin-bottom: 30px;
@@ -130,9 +150,10 @@ const HeaderStyled = styled.div`
     font-weight: 600;
   }
   .header__description {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 500;
     word-wrap: break-word;
+    margin: 5px;
   }
 `;
 
@@ -145,5 +166,13 @@ const ButtonGroupStyled = styled.div`
 
 const WrapperStyled = styled.div`
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
+`;
+
+const GroupInfo = styled.div`
+  background: #f3f6fb;
+  margin: 20px;
+  padding-bottom: 5px;
+  border-radius: 25px;
+  border: 1px solid #e6edf4;
 `;

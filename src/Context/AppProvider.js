@@ -29,6 +29,8 @@ export default function AppProvider({ children }) {
     [rooms, selectedRoomId]
   );
 
+  console.log(selectedRoom);
+
   const usersCondition = React.useMemo(() => {
     return {
       fieldName: "uid",

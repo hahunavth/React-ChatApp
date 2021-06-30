@@ -20,7 +20,13 @@ const WrapperStyled = styled.div`
   }
 
   .content {
-    margin-left: 30px;
+    margin-left: 20px;
+    background: #ffffff;
+    color: #5f768c;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.19);
+    max-width: 100px;
   }
 `;
 
@@ -54,7 +60,13 @@ const CurrentUserWrapperStyled = styled.div`
 
   .content {
     float: right;
-    margin-right: 30px;
+    margin-right: 20px;
+    color: #a6aab2;
+    background: #1a233b;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.19);
+    max-width: 500px;
   }
 `;
 
@@ -100,7 +112,7 @@ export default function Message({
   return user.uid === uid ? (
     <CurrentUserWrapperStyled>
       <div>
-        <div class="messages-container">
+        <div className="messages-container">
           <Typography.Text className="date">
             {formatDate(createdAt?.seconds)}
           </Typography.Text>
@@ -109,9 +121,9 @@ export default function Message({
             {photoURL ? "" : displayName?.charAt(0)?.toUpperCase()}
           </Avatar>
         </div>
-        <div>
-          <Typography.Text className="content">{text}</Typography.Text>
-        </div>
+        <Typography.Text className="content">
+          <span>{text}</span>
+        </Typography.Text>
       </div>
     </CurrentUserWrapperStyled>
   ) : (

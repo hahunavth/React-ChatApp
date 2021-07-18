@@ -10,9 +10,16 @@ import { Provider } from "react-redux";
 import store from "./Store";
 import MemberListModal from "./components/Modals/MemberListModal";
 // import ThemeProvider from "./Context/ThemeProvider";
-import ThemeProvider from "styled-components";
 import { useState } from "react";
-import { colorScheme } from "./constants/theme";
+import { colorScheme, ThemeContext } from "./Context/ThemeProvider";
+import { ThemeProvider } from "styled-components";
+
+function ThemeBtn({ theme, setTheme }) {
+  const handleClick = () => {
+    theme === "light" ? setTheme("dark") : setTheme("light");
+  };
+  return <button onClick={handleClick}>Change theme</button>;
+}
 
 function App() {
   const [theme, setTheme] = useState("light");
@@ -22,19 +29,23 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <AppProvider>
-            <>
-              {/* <GlobalStyles /> */}
-              <Switch>
-                <Route component={Login} path="/react_chat-app/login" />
-                <Route component={ChatRoom} path="/react_chat-app" exact />
-                <Route path="/">
-                  <Redirect to="/react_chat-app" />
-                </Route>
-              </Switch>
-              <AddRoomModal />
-              <InviteMemberModal />
-              <MemberListModal />
-            </>
+            {/* <ThemeContext.Provider value={colorScheme[theme]}> */}
+            <ThemeProvider theme={colorScheme[theme]}>
+              <>
+                <ThemeBtn theme={theme} setTheme={setTheme} />
+                <Switch>
+                  <Route component={Login} path="/react_chat-app/login" />
+                  <Route component={ChatRoom} path="/react_chat-app" exact />
+                  <Route path="/">
+                    <Redirect to="/react_chat-app" />
+                  </Route>
+                </Switch>
+                <AddRoomModal />
+                <InviteMemberModal />
+                <MemberListModal />
+              </>
+              {/* </ThemeContext.Provider> */}
+            </ThemeProvider>
           </AppProvider>
         </AuthProvider>
       </BrowserRouter>

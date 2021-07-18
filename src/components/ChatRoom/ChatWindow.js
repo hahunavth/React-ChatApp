@@ -44,6 +44,7 @@ const ButtonGroupStyled = styled.div`
 const WrapperStyled = styled.div`
   height: 96vh;
   margin-top: 2vh;
+  background: ${(props) => props.theme.colors.background};
 `;
 
 const ContentStyled = styled.div`
@@ -51,7 +52,7 @@ const ContentStyled = styled.div`
   display: flex;
   flex-direction: column;
   padding: 11px;
-  background: #f3f6fb;
+  background: ${(props) => props.theme.colors.backgroundPrimary};
   border-radius: 25px;
   justify-content: flex-end;
 `;
@@ -61,7 +62,7 @@ const FormStyled = styled(Form)`
   justify-content: space-between;
   align-items: center;
   padding: 2px 2px 2px 0;
-  border: 1px solid #cccccc;
+  border: 1px solid ${(props) => props.theme.colors.border};
   border-radius: 2px;
 
   .ant-form-item {

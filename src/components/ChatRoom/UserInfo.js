@@ -14,20 +14,20 @@ const WrapperStyled = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 12px 16px;
-  border: 1px solid ${(props) => props.theme.border};
-  background: ${(props) => props.theme.backgroundPrimary};
+  border: 1px solid ${(props) => props.theme.colors.border};
+  background: ${(props) => props.theme.colors.backgroundPrimary};
   margin: 20px 20px;
   border-radius: 25px;
   padding-top: 20px;
   padding-bottom: 20px;
   .avatar {
-    border: 1px solid ${(props) => props.theme.border};
+    border: 1px solid ${(props) => props.theme.colors.border};
     width: 50px;
     height: 50px;
     margin-bottom: 10px;
   }
   .username {
-    color: ${(props) => props.theme.textPrimary};
+    color: ${(props) => props.theme.colors.textPrimary};
     font-weight: bold;
     font-size: 20px;
     margin-left: 5px;
@@ -42,26 +42,26 @@ export default function UserInfo() {
   const { clearState } = React.useContext(AppContext);
 
   return (
-    <ThemeProvider theme={colorScheme.light}>
-      <WrapperStyled>
-        <Avatar src={photoURL} size="large" className="avatar">
-          {photoURL ? "" : displayName?.charAt(0)?.toUpperCase()}
-        </Avatar>
-        <Typography.Text className="username">{displayName}</Typography.Text>
-        <Button
-          danger
-          ghost
-          shape="round"
-          size="small"
-          onClick={() => {
-            // clear state in App Provider when logout
-            clearState();
-            auth.signOut();
-          }}
-        >
-          Đăng xuất
-        </Button>
-      </WrapperStyled>
-    </ThemeProvider>
+    // <ThemeProvider theme={colorScheme.light}>
+    <WrapperStyled>
+      <Avatar src={photoURL} size="large" className="avatar">
+        {photoURL ? "" : displayName?.charAt(0)?.toUpperCase()}
+      </Avatar>
+      <Typography.Text className="username">{displayName}</Typography.Text>
+      <Button
+        danger
+        ghost
+        shape="round"
+        size="small"
+        onClick={() => {
+          // clear state in App Provider when logout
+          clearState();
+          auth.signOut();
+        }}
+      >
+        Đăng xuất
+      </Button>
+    </WrapperStyled>
+    // </ThemeProvider>
   );
 }

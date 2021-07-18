@@ -3,11 +3,10 @@ import { Row, Col } from "antd";
 import UserInfo from "./UserInfo";
 import RoomList from "./RoomList";
 import styled from "styled-components";
-import { ThemeProvider } from "styled-components";
 
 const SidebarStyled = styled.div`
   height: 100vh;
-  background-color: #ffffff;
+  background-color: ${(props) => props.theme.colors.background};
 `;
 
 export default function Sidebar() {

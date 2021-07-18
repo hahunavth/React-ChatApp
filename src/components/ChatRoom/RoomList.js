@@ -13,7 +13,7 @@ const PanelStyled = styled(Panel)`
   &&& {
     .ant-collapse-header,
     p {
-      color: black;
+      color: ${(props) => props.theme.colors.background};
     }
 
     .ant-collapse-content-box {
@@ -31,7 +31,6 @@ const PanelStyled = styled(Panel)`
 const LinkStyled = styled(Typography.Link)`
   display: block;
   margin-bottom: 5px;
-  background: ${(props) => props.theme.backgroundPrimary};
 `;
 
 export default function RoomList() {
@@ -51,42 +50,40 @@ export default function RoomList() {
   const title = "Danh sách các phòng " + rooms.length;
 
   return (
-    <ThemeProvider theme={colorScheme.light}>
-      <Collapse ghost defaultActiveKey={["1"]}>
-        <PanelStyled header={title} key="1">
-          <div
-            style={{
-              padding: "0px",
-            }}
-          >
-            {rooms.map((room) => (
-              <LinkStyled
-                style={{
-                  padding: "10px",
-                  paddingLeft: "50px",
-                  paddingRight: "50px",
-                  borderRadius: "10px",
-                  background: selectRoomStyled(room, selectedRoomId),
-                }}
-                key={room.id}
-                copyable={false}
-                onClick={() => setSelectedRoomId(room.id)}
-              >
-                {room.name}
-              </LinkStyled>
-            ))}
-            <Button
-              type="text"
-              block
-              icon={<PlusSquareOutlined />}
-              className="add-room"
-              onClick={handleAddRoom}
+    <Collapse ghost defaultActiveKey={["1"]}>
+      <PanelStyled header={title} key="1">
+        <div
+          style={{
+            padding: "0px",
+          }}
+        >
+          {rooms.map((room) => (
+            <LinkStyled
+              style={{
+                padding: "10px",
+                paddingLeft: "50px",
+                paddingRight: "50px",
+                borderRadius: "10px",
+                background: selectRoomStyled(room, selectedRoomId),
+              }}
+              key={room.id}
+              copyable={false}
+              onClick={() => setSelectedRoomId(room.id)}
             >
-              Thêm phòng
-            </Button>
-          </div>
-        </PanelStyled>
-      </Collapse>
-    </ThemeProvider>
+              {room.name}
+            </LinkStyled>
+          ))}
+          <Button
+            type="text"
+            block
+            icon={<PlusSquareOutlined />}
+            className="add-room"
+            onClick={handleAddRoom}
+          >
+            Thêm phòng
+          </Button>
+        </div>
+      </PanelStyled>
+    </Collapse>
   );
 }

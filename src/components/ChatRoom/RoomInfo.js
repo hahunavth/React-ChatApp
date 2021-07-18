@@ -166,13 +166,13 @@ const ButtonGroupStyled = styled.div`
 
 const WrapperStyled = styled.div`
   height: 100vh;
-  background-color: #ffffff;
+  background-color: ${(props) => props.theme.colors.background};
 `;
 
 const GroupInfo = styled.div`
-  background: #f3f6fb;
+  background: ${(props) => props.theme.colors.backgroundPrimary};
   margin: 20px;
   padding-bottom: 5px;
   border-radius: 25px;
-  border: 1px solid #e6edf4;
+  border: 1px solid ${(props) => props.theme.colors.border};
 `;

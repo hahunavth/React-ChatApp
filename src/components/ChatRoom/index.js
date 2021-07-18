@@ -3,7 +3,6 @@ import { Row, Col } from "antd";
 import Sidebar from "./Sidebar";
 import ChatWindow from "./ChatWindow";
 import RoomInfo from "./RoomInfo";
-import { ThemeContext } from "../../Context/ThemeProvider";
 
 export default function ChatRoom() {
   return (

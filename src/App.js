@@ -1,6 +1,12 @@
 import "./App.css";
 import Login from "./components/Login";
-import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
+import {
+  Route,
+  Switch,
+  BrowserRouter,
+  Redirect,
+  HashRouter,
+} from "react-router-dom";
 import ChatRoom from "./components/ChatRoom";
 import AuthProvider from "./Context/AuthProvider";
 import AppProvider from "./Context/AppProvider";
@@ -10,9 +16,11 @@ import { Provider } from "react-redux";
 import store from "./Store";
 import MemberListModal from "./components/Modals/MemberListModal";
 // import ThemeProvider from "./Context/ThemeProvider";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { colorScheme, ThemeContext } from "./Context/ThemeProvider";
+import { AuthContext } from "./Context/AuthProvider";
 import { ThemeProvider } from "styled-components";
+import PrivateRoute from "./components/PrivateRoute";
 
 function ThemeBtn({ theme, setTheme }) {
   const handleClick = () => {
@@ -23,10 +31,11 @@ function ThemeBtn({ theme, setTheme }) {
 
 function App() {
   const [theme, setTheme] = useState("light");
+  // const { user } = useContext(AuthContext);
 
   return (
     <Provider store={store}>
-      <BrowserRouter>
+      <HashRouter>
         <AuthProvider>
           <AppProvider>
             {/* <ThemeContext.Provider value={colorScheme[theme]}> */}
@@ -35,8 +44,15 @@ function App() {
                 <ThemeBtn theme={theme} setTheme={setTheme} />
                 <Switch>
                   <Route component={Login} path="/react_chat-app/login" />
-                  <Route component={ChatRoom} path="/react_chat-app" exact />
-                  <Route path="/">
+                  <PrivateRoute
+                    component={ChatRoom}
+                    path="/react_chat-app"
+                    exact
+                  />
+                  {/* <Route path="/">
+                    <Redirect to="/react_chat-app" />
+                  </Route> */}
+                  <Route path="*">
                     <Redirect to="/react_chat-app" />
                   </Route>
                 </Switch>
@@ -48,7 +64,7 @@ function App() {
             </ThemeProvider>
           </AppProvider>
         </AuthProvider>
-      </BrowserRouter>
+      </HashRouter>
     </Provider>
   );
 }
